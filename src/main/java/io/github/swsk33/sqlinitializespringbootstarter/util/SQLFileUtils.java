@@ -48,6 +48,10 @@ public class SQLFileUtils {
 	 * @param connection 数据库连接对象，通过这个连接执行脚本
 	 */
 	public static void batchRunSQLScript(String[] paths, Connection connection) {
+		if (paths == null) {
+			log.warn("未配置初始化表的SQL脚本路径！只进行数据库创建！");
+			return;
+		}
 		final String classpathPrefix = "classpath:";
 		final String filePathPrefix = "file:";
 		for (String path : paths) {

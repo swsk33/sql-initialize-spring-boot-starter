@@ -1,5 +1,6 @@
 package io.github.swsk33.sqlinitializespringbootstarter.autoconfigure;
 
+import io.github.swsk33.sqlinitializespringbootstarter.param.DatabasePlatformName;
 import io.github.swsk33.sqlinitializespringbootstarter.strategy.CreateDatabaseStrategy;
 import io.github.swsk33.sqlinitializespringbootstarter.strategy.impl.MySQLCreateDatabaseStrategy;
 import io.github.swsk33.sqlinitializespringbootstarter.strategy.impl.PostgreSQLCreateDatabaseStrategy;
@@ -30,8 +31,8 @@ public class DatabaseCreateStrategyAutoConfigure {
 	 */
 	@PostConstruct
 	private void initStrategy() {
-		CREATE_DATABASE_SQL.put("mysql", new MySQLCreateDatabaseStrategy());
-		CREATE_DATABASE_SQL.put("postgresql", new PostgreSQLCreateDatabaseStrategy());
+		CREATE_DATABASE_SQL.put(DatabasePlatformName.MYSQL, new MySQLCreateDatabaseStrategy());
+		CREATE_DATABASE_SQL.put(DatabasePlatformName.POSTGRE_SQL, new PostgreSQLCreateDatabaseStrategy());
 		log.info("所有数据库创建策略初始化完成！");
 	}
 

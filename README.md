@@ -55,7 +55,7 @@
 # Spring Boot数据源配置
 spring:
   datasource:
-    url: "jdbc:postgresql://127.0.0.1:5432/init_demo?serverTimezone=GMT%2B8"
+    url: "jdbc:postgresql://127.0.0.1:5432/init_demo"
     username: "postgres"
     password: "123456"
 ```
@@ -76,7 +76,7 @@ io:
 
 指定配置值`io.github.swsk33.sql-init.sql-paths`的值即可，这是一个数组，可以配置多个SQL文件的路径，对于路径配置有下列注意事项：
 
-- 可以配置**`classpath`路径**或者**文件系统路径**（实际在电脑磁盘上的），`classpath`路径需要以`classpath:`开头，而文件系统路径需要以`file:`开头，上述例子中配置的是`classpath`路径
+- 可以配置`classpath`路径或者文件系统路径（实际在电脑磁盘上的），`classpath`路径需要以`classpath:`开头，而文件系统路径需要以`file:`开头，上述例子中配置的是`classpath`路径
 - 在Maven项目中，`classpath`的根路径对应着项目的`src/main/resources`目录
 - 若使用文件系统路径，可以使用相对路径或者绝对路径，在IDEA开发Maven项目时相对路径是相对于项目中`src`目录所在的路径，编译完成后的项目相对路径则为运行项目时的运行路径
 - 本项目在启动时会先创建数据库，然后再执行配置的SQL脚本，因此**不需要在SQL脚本中编写创建数据库的语句**，只需要写创建表或者插入初始数据的语句即可
