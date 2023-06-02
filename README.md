@@ -41,7 +41,7 @@
 <dependency>
 	<groupId>io.github.swsk33</groupId>
 	<artifactId>sql-initialize-spring-boot-starter</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 </dependency>
 ```
 
@@ -92,4 +92,4 @@ io:
 
 ![image-20230601232111599](https://swsk33-note.oss-cn-shanghai.aliyuncs.com/image-20230601232111599.png)
 
-> 最后更新：2023.6.1
+> 最后更新：2023.6.2

@@ -59,7 +59,7 @@ public class OriginDatasourceAutoConfigure {
 			// 解析URL
 			URI origin = new URI(url.replace("jdbc:", ""));
 			// 获取数据库平台
-			this.databasePlatform = origin.getScheme();
+			this.databasePlatform = origin.getScheme().toLowerCase();
 			// 获取数据库地址端口
 			this.hostAndPort = origin.getAuthority();
 			// 获取数据库名

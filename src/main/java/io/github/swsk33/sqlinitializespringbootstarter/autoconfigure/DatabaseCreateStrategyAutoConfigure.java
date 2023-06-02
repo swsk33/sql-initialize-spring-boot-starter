@@ -43,12 +43,11 @@ public class DatabaseCreateStrategyAutoConfigure {
 	 * @return 生成的SQL语句
 	 */
 	public String generateSQL(String databasePlatform, String databaseName) {
-		String platformLowercase = databasePlatform.toLowerCase();
-		if (!CREATE_DATABASE_SQL.containsKey(platformLowercase)) {
+		if (!CREATE_DATABASE_SQL.containsKey(databasePlatform)) {
 			log.error("暂时不支持数据库平台：" + databasePlatform + " 的初始化！");
 			return null;
 		}
-		return CREATE_DATABASE_SQL.get(platformLowercase).generateCreateDatabaseSQL(databaseName);
+		return CREATE_DATABASE_SQL.get(databasePlatform).generateCreateDatabaseSQL(databaseName);
 	}
 
 }

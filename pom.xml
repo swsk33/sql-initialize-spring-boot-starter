@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>io.github.swsk33</groupId>
 	<artifactId>sql-initialize-spring-boot-starter</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<name>sql-initialize-spring-boot-starter</name>
 	<description>用于自动初始化关系型数据库的starter</description>
 	<url>https://github.com/swsk33/sql-initialize-spring-boot-starter</url>

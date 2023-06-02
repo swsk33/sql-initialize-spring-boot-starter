@@ -12,6 +12,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 数据库初始化的自动配置类
@@ -40,6 +42,22 @@ public class DatabaseInitializeAutoConfigure {
 	private DatabaseInitializeProperties initializeProperties;
 
 	/**
+	 * 存放不同数据库平台对应的“找不到数据库”错误码
+	 * 键表示数据库平台，例如mysql
+	 * 值表示这个平台的驱动抛出“找不到数据库”异常时的错误码
+	 */
+	private static final Map<String, Integer> DATABASE_NOT_EXIST_ERROR_CODE = new HashMap<>();
+
+	/**
+	 * 初始化所有的数据库平台的错误码
+	 */
+	private void initErrorCode() {
+		DATABASE_NOT_EXIST_ERROR_CODE.put("mysql", 1049);
+		DATABASE_NOT_EXIST_ERROR_CODE.put("postgresql", 0);
+		log.info("错误码列表初始化完成！");
+	}
+
+	/**
 	 * 检测当前连接的库是否存在（连接URL中的数据库）
 	 *
 	 * @return 当前连接的库是否存在
@@ -50,10 +68,13 @@ public class DatabaseInitializeAutoConfigure {
 			Connection connection = DriverManager.getConnection(originDatasource.getUrl(), originDatasource.getUsername(), originDatasource.getPassword());
 			connection.close();
 		} catch (SQLException e) {
-			// 若连接抛出异常则说明连接URL中指定数据库不存在
-			return false;
+			// 若连接抛出异常且错误代码为对应的数据库平台的“找不到数据库”异常代码，则说明数据库不存在
+			if (e.getErrorCode() == DATABASE_NOT_EXIST_ERROR_CODE.get(originDatasource.getDatabasePlatform())) {
+				return false;
+			}
 		}
 		// 正常情况下说明连接URL中数据库存在
+		// 或者为其它错误代码时，不能判断数据库是否存在
 		return true;
 	}
 
