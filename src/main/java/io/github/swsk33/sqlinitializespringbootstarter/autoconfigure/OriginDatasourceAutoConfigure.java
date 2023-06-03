@@ -55,6 +55,7 @@ public class OriginDatasourceAutoConfigure {
 	 */
 	@PostConstruct
 	private void parseOriginURL() {
+		log.info("------- SQL自动初始化开始自动配置φ(>ω<*)  -------");
 		try {
 			// 解析URL
 			URI origin = new URI(url.replace("jdbc:", ""));
@@ -64,7 +65,7 @@ public class OriginDatasourceAutoConfigure {
 			this.hostAndPort = origin.getAuthority();
 			// 获取数据库名
 			this.databaseName = origin.getPath().substring(1);
-			log.info("已完成对配置数据库地址的解析！");
+			log.info("已完成对配置数据库地址的解析！数据库软件平台：" + databasePlatform);
 		} catch (URISyntaxException e) {
 			log.error("解析数据库连接地址错误！请检查连接地址配置！");
 			throw new RuntimeException(e);

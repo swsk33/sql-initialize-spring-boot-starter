@@ -41,7 +41,7 @@
 <dependency>
 	<groupId>io.github.swsk33</groupId>
 	<artifactId>sql-initialize-spring-boot-starter</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 </dependency>
 ```
 
@@ -55,7 +55,7 @@
 # Spring Boot数据源配置
 spring:
   datasource:
-    url: "jdbc:postgresql://127.0.0.1:5432/init_demo"
+    url: "jdbc:postgresql://127.0.0.1:5432/init_demo?TimeZone=Asia/Shanghai"
     username: "postgres"
     password: "123456"
 ```
@@ -82,6 +82,58 @@ io:
 - 本项目在启动时会先创建数据库，然后再执行配置的SQL脚本，因此**不需要在SQL脚本中编写创建数据库的语句**，只需要写创建表或者插入初始数据的语句即可
 - 如果仅仅是创建数据库，不需要创建表，则可以省略上述SQL路径配置
 
+### (3) 假设有的Bean初始化时需要访问数据库
+
+假设现在有一个类，在初始化为Bean的时候需要访问数据库，例如：
+
+```java
+// 省略package和import
+
+/**
+ * 启动时需要查询数据库的Bean
+ */
+@Slf4j
+@Component
+public class UserService {
+
+	@Autowired
+	private UserDAO userDAO;
+
+	@PostConstruct
+	private void init() {
+		log.info("执行数据库测试访问...");
+		userDAO.insert(new User(1));
+		List<User> users = userDAO.selectList(null);
+		for (User user : users) {
+			System.out.println(user);
+		}
+	}
+
+}
+```
+
+这个类在被初始化为Bean的时候，就需要访问数据库进行读写操作，那问题来了，如果这个类`UserService`在我们的starter完成自动配置**之前**就被初始化了怎么办呢？这会导致数据库还没有被初始化时，`UserService`就去访问数据库，导致初始化失败。
+
+可以使用`@DependsOn`注解，控制这个Bean在starter配置类完成配置之后再进行初始化：
+
+```java
+// 省略package和import
+
+/**
+ * 启动时需要查询数据库的Bean
+ */
+@Slf4j
+@Component
+@DependsOn("io.github.swsk33.SQLInitialize")
+public class UserService {
+
+	// 省略内容
+
+}
+```
+
+在类上面加上`@DependsOn("io.github.swsk33.SQLInitialize")`注解即可！
+
 ## 3，效果
 
 按照上述说明完成配置之后，第一次启动，数据库中无对应数据库，程序会自动完成数据库的创建以及SQL初始化脚本的执行：
@@ -92,4 +144,4 @@ io:
 
 ![image-20230601232111599](https://swsk33-note.oss-cn-shanghai.aliyuncs.com/image-20230601232111599.png)
 
-> 最后更新：2023.6.2
+> 最后更新：2023.6.3

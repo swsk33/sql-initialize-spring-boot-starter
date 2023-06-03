@@ -1,11 +1,11 @@
 package io.github.swsk33.sqlinitializespringbootstarter.autoconfigure;
 
-import io.github.swsk33.sqlinitializespringbootstarter.param.DatabasePlatformName;
 import io.github.swsk33.sqlinitializespringbootstarter.properties.DatabaseInitializeProperties;
 import io.github.swsk33.sqlinitializespringbootstarter.util.SQLFileUtils;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,15 +13,16 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Map;
+
+import static io.github.swsk33.sqlinitializespringbootstarter.autoconfigure.DatabaseCreateStrategyAutoConfigure.DATABASE_NOT_EXIST_ERROR_CODE;
 
 /**
  * 数据库初始化的自动配置类
  */
 @Slf4j
-@Configuration
+@Configuration("io.github.swsk33.SQLInitialize")
 @EnableConfigurationProperties(DatabaseInitializeProperties.class)
+@AutoConfigureAfter(DatabaseCreateStrategyAutoConfigure.class)
 public class DatabaseInitializeAutoConfigure {
 
 	/**
@@ -41,22 +42,6 @@ public class DatabaseInitializeAutoConfigure {
 	 */
 	@Autowired
 	private DatabaseInitializeProperties initializeProperties;
-
-	/**
-	 * 存放不同数据库平台对应的“找不到数据库”错误码，不同数据库驱动连接数据库时找不到数据库的错误码不同，例如MySQL是1049
-	 * 键表示数据库平台，例如mysql
-	 * 值表示这个平台的驱动抛出“找不到数据库”异常时的错误码
-	 */
-	private static final Map<String, Integer> DATABASE_NOT_EXIST_ERROR_CODE = new HashMap<>();
-
-	/**
-	 * 初始化所有的数据库平台的错误码
-	 */
-	private void initErrorCode() {
-		DATABASE_NOT_EXIST_ERROR_CODE.put(DatabasePlatformName.MYSQL, 1049);
-		DATABASE_NOT_EXIST_ERROR_CODE.put(DatabasePlatformName.POSTGRE_SQL, 0);
-		log.info("错误码列表初始化完成！");
-	}
 
 	/**
 	 * 检测当前连接的库是否存在（连接URL中的数据库）
@@ -111,7 +96,6 @@ public class DatabaseInitializeAutoConfigure {
 	 */
 	@PostConstruct
 	private void initDatabase() {
-		initErrorCode();
 		log.info("开始检查数据库是否需要初始化...");
 		// 检测当前连接数据库是否存在
 		if (currentDatabaseExists()) {
