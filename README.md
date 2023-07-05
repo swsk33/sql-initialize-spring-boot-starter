@@ -1,5 +1,17 @@
 # SQL数据库自动初始化Starter
 
+<p align="center">
+	<a target="_blank" href="https://central.sonatype.com/search?smo=true&q=io.github.swsk33.sql-initialize-spring-boot-starter">
+		<img src="https://img.shields.io/maven-central/v/io.github.swsk33/sql-initialize-spring-boot-starter" />
+	</a>
+	<a target="_blank" href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html">
+		<img alt="GitHub" src="https://img.shields.io/github/license/swsk33/code-post">
+	</a>
+	<a target="_blank" href="https://www.azul.com/downloads/#downloads-table-zulu">
+		<img alt="Static Badge" src="https://img.shields.io/badge/17%2B-blue?label=JDK">
+	</a>
+</p>
+
 ## 1，介绍
 
 这是一款简单的、适用于Spring Boot + MyBatis工程的数据库自动初始化工具。
@@ -143,5 +155,3 @@ public class UserService {
 第二次启动项目，由于对应数据库已存在，因此**不会**再次执行创建数据库或者执行SQL脚本的操作：
 
 ![image-20230601232111599](https://swsk33-note.oss-cn-shanghai.aliyuncs.com/image-20230601232111599.png)
-
-> 最后更新：2023.6.3
