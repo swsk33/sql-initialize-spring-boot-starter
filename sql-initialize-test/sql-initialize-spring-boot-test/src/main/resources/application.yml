@@ -1,8 +1,8 @@
-# \u670D\u52A1\u7AEF\u914D\u7F6E
+# 服务端配置
 server:
   port: 8801
 
-# \u914D\u7F6E\u6587\u4EF6
+# 配置文件选择
 spring:
   profiles:
     active: "mysql"

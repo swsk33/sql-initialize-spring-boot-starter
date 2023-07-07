@@ -53,7 +53,7 @@
 <dependency>
 	<groupId>io.github.swsk33</groupId>
 	<artifactId>sql-initialize-spring-boot-starter</artifactId>
-	<version>1.0.2</version>
+	<version>1.1.0</version>
 </dependency>
 ```
 
@@ -92,6 +92,7 @@ io:
 - 在Maven项目中，`classpath`的根路径对应着项目的`src/main/resources`目录
 - 若使用文件系统路径，可以使用相对路径或者绝对路径，在IDEA开发Maven项目时相对路径是相对于项目中`src`目录所在的路径，编译完成后的项目相对路径则为运行项目时的运行路径
 - 本项目在启动时会先创建数据库，然后再执行配置的SQL脚本，因此**不需要在SQL脚本中编写创建数据库的语句**，只需要写创建表或者插入初始数据的语句即可
+- 配置多个SQL文件时，会按照配置的顺序依次执行（从上至下，也就是从数组的`0`下标开始）
 - 如果仅仅是创建数据库，不需要创建表，则可以省略上述SQL路径配置
 
 ### (3) 假设有的Bean初始化时需要访问数据库
@@ -126,7 +127,7 @@ public class UserService {
 
 这个类在被初始化为Bean的时候，就需要访问数据库进行读写操作，那问题来了，如果这个类`UserService`在我们的starter完成自动配置**之前**就被初始化了怎么办呢？这会导致数据库还没有被初始化时，`UserService`就去访问数据库，导致初始化失败。
 
-可以使用`@DependsOn`注解，控制这个Bean在starter配置类完成配置之后再进行初始化：
+可以使用`@DependsOn`注解，控制这个Bean在Starter配置类完成配置之后再进行初始化：
 
 ```java
 // 省略package和import
@@ -136,7 +137,7 @@ public class UserService {
  */
 @Slf4j
 @Component
-@DependsOn("io.github.swsk33.SQLInitialize")
+@DependsOn("SQLInitializeAutoConfigure")
 public class UserService {
 
 	// 省略内容
@@ -144,7 +145,7 @@ public class UserService {
 }
 ```
 
-在类上面加上`@DependsOn("io.github.swsk33.SQLInitialize")`注解即可！
+在类上面加上`@DependsOn("SQLInitializeAutoConfigure")`注解即可！
 
 ## 3，效果
 
