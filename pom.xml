@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.0.0</version>
-		<relativePath/>
-	</parent>
 	<groupId>io.github.swsk33</groupId>
-	<artifactId>sql-initialize-spring-boot-starter</artifactId>
-	<version>1.0.2</version>
-	<name>sql-initialize-spring-boot-starter</name>
-	<description>用于自动初始化关系型数据库的starter</description>
+	<artifactId>sql-initialize-parent</artifactId>
+	<version>1.1.0</version>
+	<packaging>pom</packaging>
+	<name>SQL-Initialize Parent</name>
+	<description>用于自动初始化关系型数据库的外部库</description>
 	<url>https://github.com/swsk33/sql-initialize-spring-boot-starter</url>
+
+	<modules>
+		<module>sql-initialize-core</module>
+		<module>sql-initialize-spring-boot-starter</module>
+	</modules>
 
 	<properties>
 		<java.version>17</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<spring.boot.starter.version>3.0.0</spring.boot.starter.version>
 	</properties>
 
 	<licenses>
@@ -55,41 +56,55 @@
 		</repository>
 	</distributionManagement>
 
+	<!-- 公用依赖 -->
 	<dependencies>
-		<!-- Spring Boot Starter支持 -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
-
-		<!-- Spring Boot 配置属性自动生成器 -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-			<optional>true</optional>
-		</dependency>
-
 		<!-- Lombok注解支持 -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
+			<version>1.18.28</version>
 			<scope>provided</scope>
 		</dependency>
-
-		<!-- Hutool实用工具 -->
-		<dependency>
-			<groupId>cn.hutool</groupId>
-			<artifactId>hutool-all</artifactId>
-			<version>5.8.20</version>
-		</dependency>
-
-		<!-- MyBatis -->
-		<dependency>
-			<groupId>org.mybatis</groupId>
-			<artifactId>mybatis</artifactId>
-			<version>3.5.13</version>
-		</dependency>
 	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Spring Boot Starter支持 -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter</artifactId>
+				<version>${spring.boot.starter.version}</version>
+			</dependency>
+
+			<!-- Spring Boot 配置属性自动生成器 -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-configuration-processor</artifactId>
+				<version>${spring.boot.starter.version}</version>
+			</dependency>
+
+			<!-- Slf4J-API -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>2.0.7</version>
+			</dependency>
+
+			<!-- Hutool实用工具 -->
+			<dependency>
+				<groupId>cn.hutool</groupId>
+				<artifactId>hutool-all</artifactId>
+				<version>5.8.20</version>
+			</dependency>
+
+			<!-- SQL初始化核心 -->
+			<dependency>
+				<groupId>io.github.swsk33</groupId>
+				<artifactId>sql-initialize-core</artifactId>
+				<version>1.1.0</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<plugins>
@@ -113,6 +128,10 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>3.5.0</version>
+				<configuration>
+					<show>private</show>
+					<nohelp>true</nohelp>
+				</configuration>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>

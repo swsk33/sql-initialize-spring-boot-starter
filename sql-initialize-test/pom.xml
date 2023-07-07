@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<artifactId>sql-initialize-parent</artifactId>
+		<groupId>io.github.swsk33</groupId>
+		<version>1.1.0</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>sql-initialize-test</artifactId>
+	<packaging>pom</packaging>
+	<name>SQL-Initialize Test Parent</name>
+	<description>SQL-Initialize测试父模块</description>
+
+	<modules>
+		<module>sql-initialize-spring-boot-test</module>
+	</modules>
+
+	<properties>
+		<spring.boot.test.version>3.1.1</spring.boot.test.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Spring Boot Starter -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter</artifactId>
+				<version>${spring.boot.test.version}</version>
+			</dependency>
+
+			<!-- Spring Boot Web -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-web</artifactId>
+				<version>${spring.boot.test.version}</version>
+			</dependency>
+
+			<!-- MyBatis -->
+			<dependency>
+				<groupId>org.mybatis.spring.boot</groupId>
+				<artifactId>mybatis-spring-boot-starter</artifactId>
+				<version>3.0.2</version>
+			</dependency>
+
+			<!-- MySQL连接驱动 -->
+			<dependency>
+				<groupId>com.mysql</groupId>
+				<artifactId>mysql-connector-j</artifactId>
+				<version>8.0.33</version>
+			</dependency>
+
+			<!-- PostgreSQL连接驱动 -->
+			<dependency>
+				<groupId>org.postgresql</groupId>
+				<artifactId>postgresql</artifactId>
+				<version>42.6.0</version>
+			</dependency>
+
+			<!-- SQL初始化Starter -->
+			<dependency>
+				<groupId>io.github.swsk33</groupId>
+				<artifactId>sql-initialize-spring-boot-starter</artifactId>
+				<version>1.1.0</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>

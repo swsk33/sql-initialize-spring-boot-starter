@@ -1,0 +1,8 @@
+# \u670D\u52A1\u7AEF\u914D\u7F6E
+server:
+  port: 8801
+
+# \u914D\u7F6E\u6587\u4EF6
+spring:
+  profiles:
+    active: "mysql"

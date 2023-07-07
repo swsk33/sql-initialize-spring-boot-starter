@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<artifactId>sql-initialize-parent</artifactId>
+		<groupId>io.github.swsk33</groupId>
+		<version>1.1.0</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>sql-initialize-core</artifactId>
+	<name>SQL-Initialize Core</name>
+	<description>SQL-Initialize核心，仅提供一些执行脚本、创建数据库策略等等类</description>
+	<url>https://github.com/swsk33/sql-initialize-spring-boot-starter</url>
+
+	<dependencies>
+		<!-- Hutool实用工具 -->
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-all</artifactId>
+		</dependency>
+
+		<!-- Slf4J-API -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+	</dependencies>
+</project>
