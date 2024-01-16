@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.swsk33</groupId>
 	<artifactId>sql-initialize-parent</artifactId>
-	<version>1.1.0</version>
+	<version>2.0.0</version>
 	<packaging>pom</packaging>
 	<name>SQL-Initialize Parent</name>
 	<description>用于自动初始化关系型数据库的外部库</description>
@@ -20,6 +20,7 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.boot.starter.version>3.0.0</spring.boot.starter.version>
+		<sql.initialize.version>2.0.0</sql.initialize.version>
 	</properties>
 
 	<licenses>
@@ -62,7 +63,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.28</version>
+			<version>1.18.30</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
@@ -101,7 +102,7 @@
 			<dependency>
 				<groupId>io.github.swsk33</groupId>
 				<artifactId>sql-initialize-core</artifactId>
-				<version>1.1.0</version>
+				<version>${sql.initialize.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

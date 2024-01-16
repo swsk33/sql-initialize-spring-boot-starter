@@ -2,6 +2,7 @@ package io.github.swsk33.sqlinitializecore.util;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ClassPathResource;
+import io.github.swsk33.sqlinitializecore.strategy.context.CreateDatabaseContext;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
@@ -16,7 +17,7 @@ import java.sql.Statement;
  * SQL文件执行的实用类
  */
 @Slf4j
-public class SQLFileUtils {
+public class SQLExecuteUtils {
 
 	/**
 	 * classpath路径前缀
@@ -27,6 +28,30 @@ public class SQLFileUtils {
 	 * 文件系统路径前缀
 	 */
 	private static final String FILE_PREFIX = "file:";
+
+	/**
+	 * 创建一个数据库
+	 *
+	 * @param databasePlatform 数据库平台
+	 * @param databaseName     要创建的数据库名
+	 * @param connection       JDBC连接
+	 */
+	public static void createDatabase(String databasePlatform, String databaseName, Connection connection) {
+		try (Statement statement = connection.createStatement()) {
+			// 根据不同的数据库平台生成SQL语句
+			String createSQL = CreateDatabaseContext.generateCreateDatabaseSQL(databasePlatform, databaseName);
+			// 若为null说明数据库平台不在支持范围，终止
+			if (createSQL == null) {
+				return;
+			}
+			// 执行
+			statement.execute(createSQL);
+			log.info("已创建数据库{}！", databaseName);
+		} catch (Exception e) {
+			log.error("创建数据库失败！");
+			log.error(e.getMessage());
+		}
+	}
 
 	/**
 	 * 读取并执行一个SQL脚本文件
@@ -52,7 +77,7 @@ public class SQLFileUtils {
 				// 去除两端不可见字符
 				line = line.trim();
 				// 跳过注释或者空字符行
-				if (line.length() == 0 || line.startsWith("--") || line.startsWith("#")) {
+				if (line.isEmpty() || line.startsWith("--") || line.startsWith("#")) {
 					continue;
 				}
 				// 将语句追加至每次执行的语句
@@ -66,13 +91,13 @@ public class SQLFileUtils {
 				}
 			}
 			// 若读取完成后，每次执行的语句中还有语句，则继续执行
-			if (sqlExecute.length() > 0) {
+			if (!sqlExecute.isEmpty()) {
 				statement.execute(sqlExecute.toString());
 				System.out.println(sqlExecute);
 			}
 		} catch (Exception e) {
 			log.error("执行SQL文件失败！");
-			e.printStackTrace();
+			log.error(e.getMessage());
 		}
 	}
 

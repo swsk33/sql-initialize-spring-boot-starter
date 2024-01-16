@@ -53,7 +53,7 @@
 <dependency>
 	<groupId>io.github.swsk33</groupId>
 	<artifactId>sql-initialize-spring-boot-starter</artifactId>
-	<version>1.1.0</version>
+	<version>2.0.0</version>
 </dependency>
 ```
 
@@ -149,10 +149,10 @@ public class UserService {
 
 ## 3，效果
 
-按照上述说明完成配置之后，第一次启动，数据库中无对应数据库，程序会自动完成数据库的创建以及SQL初始化脚本的执行：
+按照上述说明完成配置之后，第一次启动，如果**数据库中无对应数据库或者数据库中没有任何表格**，程序会自动完成数据库的创建以及SQL初始化脚本的执行：
 
-![image-20230601231913305](https://swsk33-note.oss-cn-shanghai.aliyuncs.com/image-20230601231913305.png)
+![image-20240116190703082](https://swsk33-note.oss-cn-shanghai.aliyuncs.com/image-20240116190703082.png)
 
-第二次启动项目，由于对应数据库已存在，因此**不会**再次执行创建数据库或者执行SQL脚本的操作：
+第二次启动项目，由于对应数据库已存在且数据库中已有表了，因此**不会**再次执行创建数据库或者执行SQL脚本的操作：
 
-![image-20230601232111599](https://swsk33-note.oss-cn-shanghai.aliyuncs.com/image-20230601232111599.png)
+![image-20240116190740148](https://swsk33-note.oss-cn-shanghai.aliyuncs.com/image-20240116190740148.png)
