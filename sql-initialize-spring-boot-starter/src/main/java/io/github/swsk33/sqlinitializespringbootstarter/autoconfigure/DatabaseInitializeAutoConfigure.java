@@ -1,6 +1,8 @@
 package io.github.swsk33.sqlinitializespringbootstarter.autoconfigure;
 
+import cn.hutool.core.util.StrUtil;
 import io.github.swsk33.sqlinitializecore.model.ConnectionMetadata;
+import io.github.swsk33.sqlinitializecore.strategy.context.MetaCheckURLContext;
 import io.github.swsk33.sqlinitializecore.util.DatabaseMetadataUtils;
 import io.github.swsk33.sqlinitializecore.util.SQLExecuteUtils;
 import io.github.swsk33.sqlinitializespringbootstarter.properties.DatabaseInitializeProperties;
@@ -41,12 +43,21 @@ public class DatabaseInitializeAutoConfigure {
 		log.info("开始检查数据库是否需要初始化...");
 		// 组装地址并重新连接
 		ConnectionMetadata urlMeta = originDatasource.getMetadata();
-		String checkUrl = "jdbc:" + urlMeta.getDatabasePlatform() + "://" + urlMeta.getHostAndPort() + "/";
+		// 根据策略获取不同数据库平台对应的检测连接地址
+		String checkUrl = MetaCheckURLContext.getCheckURL(urlMeta);
+		// 获取失败则退出
+		if (StrUtil.isEmpty(checkUrl)) {
+			return;
+		}
 		try (Connection connection = DriverManager.getConnection(checkUrl, originDatasource.getUsername(), originDatasource.getPassword())) {
 			// 检测数据库是否存在
 			if (!DatabaseMetadataUtils.databaseExists(urlMeta.getDatabaseName(), connection)) {
 				log.warn("数据库不存在！准备创建！");
-				SQLExecuteUtils.createDatabase(urlMeta.getDatabasePlatform(), urlMeta.getDatabaseName(), connection);
+				boolean createSuccess = SQLExecuteUtils.createDatabase(urlMeta.getDatabasePlatform(), urlMeta.getDatabaseName(), connection);
+				// 创建失败则退出
+				if (!createSuccess) {
+					return;
+				}
 			} else {
 				log.info("数据库存在，不需要创建！");
 			}

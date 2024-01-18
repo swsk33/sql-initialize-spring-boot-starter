@@ -26,7 +26,6 @@ public class CreateDatabaseContext {
 	static {
 		CREATE_DATABASE_SQL.put(DatabasePlatformName.MYSQL, new MySQLCreateDatabaseStrategy());
 		CREATE_DATABASE_SQL.put(DatabasePlatformName.POSTGRE_SQL, new PostgreSQLCreateDatabaseStrategy());
-		log.info("所有数据库创建策略初始化完成！");
 	}
 
 	/**
@@ -37,8 +36,9 @@ public class CreateDatabaseContext {
 	 * @return 生成的SQL语句
 	 */
 	public static String generateCreateDatabaseSQL(String databasePlatform, String databaseName) {
+		databasePlatform = databasePlatform.toLowerCase();
 		if (!CREATE_DATABASE_SQL.containsKey(databasePlatform)) {
-			log.error("暂时不支持数据库平台：" + databasePlatform + " 的初始化！");
+			log.error("暂时不支持数据库平台：{}的初始化！", databasePlatform);
 			return null;
 		}
 		return CREATE_DATABASE_SQL.get(databasePlatform).generateCreateDatabaseSQL(databaseName);

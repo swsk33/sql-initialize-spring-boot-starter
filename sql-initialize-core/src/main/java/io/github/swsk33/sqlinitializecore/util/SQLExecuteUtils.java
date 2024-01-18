@@ -35,14 +35,15 @@ public class SQLExecuteUtils {
 	 * @param databasePlatform 数据库平台
 	 * @param databaseName     要创建的数据库名
 	 * @param connection       JDBC连接
+	 * @return 是否创建成功
 	 */
-	public static void createDatabase(String databasePlatform, String databaseName, Connection connection) {
+	public static boolean createDatabase(String databasePlatform, String databaseName, Connection connection) {
 		try (Statement statement = connection.createStatement()) {
 			// 根据不同的数据库平台生成SQL语句
 			String createSQL = CreateDatabaseContext.generateCreateDatabaseSQL(databasePlatform, databaseName);
 			// 若为null说明数据库平台不在支持范围，终止
 			if (createSQL == null) {
-				return;
+				return false;
 			}
 			// 执行
 			statement.execute(createSQL);
@@ -50,7 +51,9 @@ public class SQLExecuteUtils {
 		} catch (Exception e) {
 			log.error("创建数据库失败！");
 			log.error(e.getMessage());
+			return false;
 		}
+		return true;
 	}
 
 	/**

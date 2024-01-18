@@ -2,8 +2,8 @@
 spring:
   datasource:
     url: "jdbc:postgresql://127.0.0.1:5432/init_demo?TimeZone=Asia/Shanghai"
-    username: "postgres"
-    password: "123456"
+    username: "swsk33"
+    password: "dev-2333"
     driver-class-name: "org.postgresql.Driver"
 
 # MyBatis XML位置
