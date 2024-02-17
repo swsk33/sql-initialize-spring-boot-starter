@@ -1,8 +1,0 @@
-# 服务端配置
-server:
-  port: 5354
-
-# 配置文件选择
-spring:
-  profiles:
-    active: "postgresql"

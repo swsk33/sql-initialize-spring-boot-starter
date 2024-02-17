@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>io.github.swsk33</groupId>
+	<artifactId>sql-initialize-parent</artifactId>
+	<version>2.1.0</version>
+	<packaging>pom</packaging>
+	<name>SQL-Initialize Parent</name>
+	<description>用于自动初始化关系型数据库的外部库</description>
+	<url>https://github.com/swsk33/sql-initialize-spring-boot-starter</url>
+
+	<modules>
+		<module>sql-initialize-core</module>
+		<module>sql-initialize-spring-boot-starter</module>
+	</modules>
+
+	<properties>
+		<java.version>1.8</java.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<spring.boot.starter.version>2.7.11</spring.boot.starter.version>
+		<sql.initialize.version>2.1.0</sql.initialize.version>
+	</properties>
+
+	<licenses>
+		<license>
+			<name>GNU General Public License v2.0</name>
+			<url>https://www.gnu.org/licenses/old-licenses/gpl-2.0.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<scm>
+		<url>https://github.com/swsk33/sql-initialize-spring-boot-starter</url>
+		<connection>git@github.com:swsk33/sql-initialize-spring-boot-starter.git</connection>
+		<developerConnection>https://github.com/swsk33/sql-initialize-spring-boot-starter</developerConnection>
+	</scm>
+
+	<developers>
+		<developer>
+			<name>守望时空33</name>
+			<email>yanhanhui2001a@163.com</email>
+			<url>https://github.com/swsk33</url>
+		</developer>
+	</developers>
+
+	<!-- 公用依赖 -->
+	<dependencies>
+		<!-- Lombok注解支持 -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.30</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Spring Boot Starter支持 -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter</artifactId>
+				<version>${spring.boot.starter.version}</version>
+			</dependency>
+
+			<!-- Spring Boot 配置属性自动生成器 -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-configuration-processor</artifactId>
+				<version>${spring.boot.starter.version}</version>
+			</dependency>
+
+			<!-- Slf4J-API -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>2.0.12</version>
+			</dependency>
+
+			<!-- Hutool实用工具 -->
+			<dependency>
+				<groupId>cn.hutool</groupId>
+				<artifactId>hutool-all</artifactId>
+				<version>5.8.26</version>
+			</dependency>
+
+			<!-- SQL初始化核心 -->
+			<dependency>
+				<groupId>io.github.swsk33</groupId>
+				<artifactId>sql-initialize-core</artifactId>
+				<version>${sql.initialize.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<!-- Sonatype中央仓库发布插件 -->
+			<plugin>
+				<groupId>org.sonatype.central</groupId>
+				<artifactId>central-publishing-maven-plugin</artifactId>
+				<version>0.1.2</version>
+				<extensions>true</extensions>
+				<configuration>
+					<publishingServerId>central</publishingServerId>
+					<tokenEnabled>true</tokenEnabled>
+				</configuration>
+			</plugin>
+
+			<!-- 源码生成插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.3.0</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Javadoc文档生成插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.6.3</version>
+				<configuration>
+					<show>private</show>
+					<nohelp>true</nohelp>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- GPG签名插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

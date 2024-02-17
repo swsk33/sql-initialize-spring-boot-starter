@@ -8,13 +8,14 @@
 		<img alt="GitHub" src="https://img.shields.io/github/license/swsk33/code-post">
 	</a>
 	<a target="_blank" href="https://www.azul.com/downloads/#downloads-table-zulu">
-		<img alt="Static Badge" src="https://img.shields.io/badge/17%2B-blue?label=JDK">
+		<img alt="Static Badge" src="https://img.shields.io/badge/8%2B-blue?label=JDK">
 	</a>
 </p>
 
+
 ## 1，介绍
 
-这是一款简单的、适用于Spring Boot + MyBatis工程的数据库自动初始化工具。
+这是一款简单的、适用于Spring Boot的数据库自动初始化工具。
 
 ### (1) 项目背景
 
@@ -26,16 +27,16 @@
 
 那能不能**让我们的SSM应用程序第一次启动时，自动地帮我们执行SQL文件以完成数据库初始化工作呢？**
 
-鉴于上述问题，我开发了这个简单的starter，只需引入并配置一下用于初始化的SQL脚本，在项目第一次启动时即可自动地连接数据库并完成数据库的初始化工作。
+鉴于上述问题，我开发了这个简单的Starter，只需引入并配置一下用于初始化的SQL脚本，在项目第一次启动时即可自动地连接数据库并完成数据库的初始化工作。
 
 该项目的机制参考：[传送门](https://juejin.cn/post/7238522776055103544)
 
 ### (2) 环境要求
 
-使用该starter的项目需要满足下列要求：
+使用该Starter的项目需要满足下列要求：
 
-- JDK 17及其以上版本
-- Spring Boot 3.0.0及其以上版本
+- JDK 8及其以上版本
+- Spring Boot 2.x及其以上版本，推荐2.7.x版本
 
 目前支持的数据库：
 
@@ -53,7 +54,7 @@
 <dependency>
 	<groupId>io.github.swsk33</groupId>
 	<artifactId>sql-initialize-spring-boot-starter</artifactId>
-	<version>2.0.1</version>
+	<version>2.1.0</version>
 </dependency>
 ```
 
@@ -156,3 +157,26 @@ public class UserService {
 第二次启动项目，由于对应数据库已存在且数据库中已有表了，因此**不会**再次执行创建数据库或者执行SQL脚本的操作：
 
 ![image-20240116190740148](https://swsk33-note.oss-cn-shanghai.aliyuncs.com/image-20240116190740148.png)
+
+## 4，部分问题
+
+### (1) 连接PostgreSQL时，报错`ERROR: database "xxx" already exists`
+
+在项目连接PostgreSQL时，若数据库存在，Starter启动时报错：
+
+```
+2024-02-17T12:53:10.534+08:00 ERROR 6764 --- [main] i.g.s.s.util.SQLExecuteUtils: 创建数据库失败！
+2024-02-17T12:53:10.534+08:00 ERROR 6764 --- [main] i.g.s.s.util.SQLExecuteUtils: ERROR: database "xxx" already exists
+```
+
+这是由于PostgreSQL驱动版本过低导致，将项目中PostgreSQL驱动手动设定为最新版本即可，而不是继承Spring Boot依赖版本：
+
+```xml
+<!-- PostgreSQL驱动 -->
+<dependency>
+	<groupId>org.postgresql</groupId>
+	<artifactId>postgresql</artifactId>
+	<version>42.7.1</version>
+	<scope>runtime</scope>
+</dependency>
+```
