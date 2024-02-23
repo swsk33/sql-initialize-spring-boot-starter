@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<groupId>io.github.swsk33</groupId>
+		<artifactId>sql-initialize-parent</artifactId>
+		<version>2.1.0</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>sql-initialize-test-parent</artifactId>
+	<packaging>pom</packaging>
+	<name>SQL-Initialize Test Parent</name>
+	<description>SQL Initialize测试父项目</description>
+
+	<modules>
+		<module>sql-initialize-spring-boot2-test</module>
+		<module>sql-initialize-spring-boot3-test</module>
+	</modules>
+
+	<properties>
+		<spring.boot2.test.version>2.7.12</spring.boot2.test.version>
+		<spring.boot3.test.version>3.2.2</spring.boot3.test.version>
+		<postgre.version>42.7.1</postgre.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- SQL初始化Starter版本管理 -->
+			<dependency>
+				<groupId>io.github.swsk33</groupId>
+				<artifactId>sql-initialize-spring-boot-starter</artifactId>
+				<version>${sql.initialize.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>

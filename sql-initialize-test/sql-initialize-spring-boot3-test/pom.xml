@@ -2,20 +2,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.12</version>
-		<relativePath/>
+		<groupId>io.github.swsk33</groupId>
+		<artifactId>sql-initialize-test-parent</artifactId>
+		<version>2.1.0</version>
 	</parent>
-	<artifactId>sql-initialize-spring-boot2-test</artifactId>
-	<name>SQL Initialize Spring Boot2 Test</name>
-	<description>SQL-Initialize Spring Boot测试，2.x版本</description>
+	<artifactId>sql-initialize-spring-boot3-test</artifactId>
+	<name>SQL Initialize Spring Boot3 Test</name>
+	<description>SQL-Initialize Spring Boot测试，3.x版本</description>
 
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>17</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<dependencies>
@@ -29,7 +27,7 @@
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
 			<artifactId>mybatis-spring-boot-starter</artifactId>
-			<version>2.3.2</version>
+			<version>3.0.3</version>
 		</dependency>
 
 		<!-- MySQL驱动 -->
@@ -43,31 +41,36 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.7.1</version>
+			<version>${postgre.version}</version>
 			<scope>runtime</scope>
-		</dependency>
-
-		<!-- Lombok注解 -->
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.18.30</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<!-- SQL初始化Starter -->
 		<dependency>
 			<groupId>io.github.swsk33</groupId>
 			<artifactId>sql-initialize-spring-boot-starter</artifactId>
-			<version>2.1.0</version>
+			<version>${sql.initialize.version}</version>
 		</dependency>
 	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring.boot3.test.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${spring.boot3.test.version}</version>
 				<configuration>
 					<excludes>
 						<exclude>

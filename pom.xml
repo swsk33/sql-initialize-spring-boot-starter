@@ -19,7 +19,6 @@
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spring.boot.starter.version>2.7.11</spring.boot.starter.version>
 		<sql.initialize.version>2.1.0</sql.initialize.version>
 	</properties>
 
@@ -58,27 +57,6 @@
 
 	<dependencyManagement>
 		<dependencies>
-			<!-- Spring Boot Starter支持 -->
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-starter</artifactId>
-				<version>${spring.boot.starter.version}</version>
-			</dependency>
-
-			<!-- Spring Boot 配置属性自动生成器 -->
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-configuration-processor</artifactId>
-				<version>${spring.boot.starter.version}</version>
-			</dependency>
-
-			<!-- Slf4J-API -->
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>2.0.12</version>
-			</dependency>
-
 			<!-- Hutool实用工具 -->
 			<dependency>
 				<groupId>cn.hutool</groupId>
