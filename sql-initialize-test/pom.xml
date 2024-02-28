@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>io.github.swsk33</groupId>
 		<artifactId>sql-initialize-parent</artifactId>
-		<version>2.1.0</version>
+		<version>${revision}</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>sql-initialize-test-parent</artifactId>
@@ -19,7 +19,7 @@
 	<properties>
 		<spring.boot2.test.version>2.7.12</spring.boot2.test.version>
 		<spring.boot3.test.version>3.2.2</spring.boot3.test.version>
-		<postgre.version>42.7.1</postgre.version>
+		<postgre.version>42.7.2</postgre.version>
 	</properties>
 
 	<dependencyManagement>
@@ -28,7 +28,7 @@
 			<dependency>
 				<groupId>io.github.swsk33</groupId>
 				<artifactId>sql-initialize-spring-boot-starter</artifactId>
-				<version>${sql.initialize.version}</version>
+				<version>${revision}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.swsk33</groupId>
 	<artifactId>sql-initialize-parent</artifactId>
-	<version>2.1.0</version>
+	<version>${revision}</version>
 	<packaging>pom</packaging>
 	<name>SQL-Initialize Parent</name>
 	<description>用于自动初始化关系型数据库的外部库</description>
@@ -15,11 +15,12 @@
 	</modules>
 
 	<properties>
+		<!-- 使用revision表示本项目版本号，否则引用变量作为版本时会报错 -->
+		<revision>2.2.0</revision>
 		<java.version>1.8</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<sql.initialize.version>2.1.0</sql.initialize.version>
 	</properties>
 
 	<licenses>
@@ -68,7 +69,7 @@
 			<dependency>
 				<groupId>io.github.swsk33</groupId>
 				<artifactId>sql-initialize-core</artifactId>
-				<version>${sql.initialize.version}</version>
+				<version>${revision}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>io.github.swsk33</groupId>
 		<artifactId>sql-initialize-test-parent</artifactId>
-		<version>2.1.0</version>
+		<version>${revision}</version>
 	</parent>
 	<artifactId>sql-initialize-spring-boot3-test</artifactId>
 	<name>SQL Initialize Spring Boot3 Test</name>
@@ -49,7 +49,6 @@
 		<dependency>
 			<groupId>io.github.swsk33</groupId>
 			<artifactId>sql-initialize-spring-boot-starter</artifactId>
-			<version>${sql.initialize.version}</version>
 		</dependency>
 	</dependencies>
 
