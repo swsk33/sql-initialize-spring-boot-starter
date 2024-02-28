@@ -1,0 +1,21 @@
+# Spring Boot PostgreSQL数据源配置
+spring:
+  datasource:
+    url: "jdbc:postgresql://127.0.0.1:3307/my_sharding?TimeZone=Asia/Shanghai"
+    username: "swsk33"
+    password: "wocaoop"
+    driver-class-name: "org.postgresql.Driver"
+
+# MyBatis XML位置
+mybatis:
+  mapper-locations: "classpath:/mapper/postgresql/*.xml"
+
+# sql-initialize配置
+io:
+  github:
+    swsk33:
+      sql-init:
+        sql-paths:
+          - "file:init-postgresql/table.sql"
+          - "file:init-postgresql/data-sharding.sql"
+        check-database: false

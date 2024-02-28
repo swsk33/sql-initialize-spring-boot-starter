@@ -54,7 +54,7 @@
 <dependency>
 	<groupId>io.github.swsk33</groupId>
 	<artifactId>sql-initialize-spring-boot-starter</artifactId>
-	<version>2.1.0</version>
+	<version>2.2.0</version>
 </dependency>
 ```
 
@@ -158,7 +158,36 @@ public class UserService {
 
 ![image-20240116190740148](https://swsk33-note.oss-cn-shanghai.aliyuncs.com/image-20240116190740148.png)
 
-## 4，部分问题
+## 4，全部配置
+
+SQL自动初始化的全部配置示例如下：
+
+```yaml
+# sql-initialize配置
+io:
+  github:
+    swsk33:
+      sql-init:
+        # 是否启用数据库初始化功能
+        # 若设定为false，则不会进行数据库检查以及初始化操作，Starter中全部流程都不会执行
+        # 默认：true
+        enabled: true
+        # 是否在初始化表格之前，检查数据库是否存在并创建
+        # 如果设定为false，则会跳过数据库检查步骤，直接开始创建表格
+        # 在连接到ShardingSphere-Proxy分片代理时，建议设定该项为false
+        # 默认：true
+        check-database: true
+        # 用于初始化数据库时执行的SQL脚本路径列表
+        # 其中以"classpath:"开头表示文件位于classpath中，以"file:"开头表示文件位于文件系统
+        # 默认：null
+        sql-paths:
+          - "file:init-postgresql/table.sql"
+          - "file:init-postgresql/data-sharding.sql"
+```
+
+如果想保持默认值，则可以省略对应的配置。
+
+## 5，部分问题
 
 ### (1) 连接PostgreSQL时，报错`ERROR: database "xxx" already exists`
 
@@ -176,7 +205,24 @@ public class UserService {
 <dependency>
 	<groupId>org.postgresql</groupId>
 	<artifactId>postgresql</artifactId>
-	<version>42.7.1</version>
+	<version>42.7.2</version>
 	<scope>runtime</scope>
 </dependency>
 ```
+
+### (2) 连接到ShardingSphere-Proxy时，检测数据库步骤出现错误
+
+SQL初始化Starter通过JDBC的接口检测连接元数据信息，从中获取数据库列表等等，这对于单节点数据库是不会出现错误的，但是对于连接到ShardingSphere-Proxy时该方法就不准确了。
+
+所以设定配置项`io.github.swsk33.sql-init.check-database`为`false`即可，跳过数据库检查这个步骤，因为ShardingSphere-Proxy的逻辑数据库是一定存在的：
+
+```yaml
+io:
+  github:
+    swsk33:
+      sql-init:
+        # 跳过数据库检查
+        check-database: false
+```
+
+不过，数据库表格是可以正常创建的。

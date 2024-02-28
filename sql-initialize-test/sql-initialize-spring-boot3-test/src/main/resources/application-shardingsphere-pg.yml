@@ -1,0 +1,32 @@
+# Spring Boot PostgreSQL数据源配置
+spring:
+  datasource:
+    url: "jdbc:postgresql://127.0.0.1:3307/my_sharding?TimeZone=Asia/Shanghai"
+    username: "swsk33"
+    password: "wocaoop"
+    driver-class-name: "org.postgresql.Driver"
+
+# MyBatis XML位置
+mybatis:
+  mapper-locations: "classpath:/mapper/postgresql/*.xml"
+
+# sql-initialize配置
+io:
+  github:
+    swsk33:
+      sql-init:
+        # 是否启用数据库初始化功能
+        # 若设定为false，则不会进行数据库检查以及初始化操作，Starter中全部流程都不会执行
+        # 默认：true
+        enabled: true
+        # 是否在初始化表格之前，检查数据库是否存在并创建
+        # 如果设定为false，则会跳过数据库检查步骤，直接开始创建表格
+        # 在连接到ShardingSphere-Proxy分片代理时，建议设定该项为false
+        # 默认：true
+        check-database: false
+        # 用于初始化数据库时执行的SQL脚本路径列表
+        # 其中以"classpath:"开头表示文件位于classpath中，以"file:"开头表示文件位于文件系统
+        # 默认：null
+        sql-paths:
+          - "file:init-postgresql/table.sql"
+          - "file:init-postgresql/data-sharding.sql"

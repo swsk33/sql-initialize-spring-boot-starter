@@ -55,6 +55,10 @@ public class DatabaseInitializeAutoConfigure implements InitializingBean {
 	 * @return 是否创建成功
 	 */
 	private boolean checkDatabase(ConnectionMetadata metadata) {
+		if (!initializeProperties.isCheckDatabase()) {
+			log.warn("已禁用数据库检查！将不会检查数据库是否存在，直接进行表格创建操作！");
+			return true;
+		}
 		log.info("开始检查数据库是否需要初始化...");
 		// 组装地址并重新连接
 		// 根据策略获取不同数据库平台对应的检测连接地址
