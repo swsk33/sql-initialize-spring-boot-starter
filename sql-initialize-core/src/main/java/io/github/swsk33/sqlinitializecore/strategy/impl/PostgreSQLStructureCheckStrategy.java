@@ -22,7 +22,7 @@ public class PostgreSQLStructureCheckStrategy implements DatabaseStructureCheckS
 
 	@Override
 	public String getCheckConnectionURL(ConnectionMetadata metadata) {
-		return "jdbc:" + metadata.getDatabasePlatform() + "://" + metadata.getHostAndPort() + "/postgres";
+		return metadata.toConnectionUrl("postgres");
 	}
 
 	@Override

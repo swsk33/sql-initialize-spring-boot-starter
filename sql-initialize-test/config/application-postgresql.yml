@@ -1,7 +1,7 @@
 # Spring Boot PostgreSQL数据源配置
 spring:
   datasource:
-    url: "jdbc:postgresql://${POSTGRE_HOST:127.0.0.1}:${POSTGRE_HOST:5432}/init_demo?TimeZone=Asia/Shanghai"
+    url: "jdbc:postgresql://${POSTGRE_HOST:127.0.0.1}:${POSTGRE_PORT:5432}/init_demo?TimeZone=Asia/Shanghai"
     username: "${POSTGRE_USER:root}"
     password: "${POSTGRE_PASSWORD:dev-2333}"
     driver-class-name: "org.postgresql.Driver"
@@ -22,15 +22,23 @@ io:
           # 是否检查数据库是否存在
           check-database: true
           # 若数据库不存在，则会依次执行下列SQL文件
-          # sql-paths:
-          #  - "classpath:setup-database.sql"
+          sql-paths:
+            - "file:init-postgresql/setup-db.sql"
         # 数据表检查选项
         table-check:
           # 是否检查特定数据表是否存在
           check-table: true
           # 配置要检查的数据表列表
           table-list:
+            # 检查用户表
             - table-name: "user"
+              # 用户表不存在则执行下列用户表相关初始化脚本
               sql-paths:
-                - "file:init-postgresql/table.sql"
-                - "file:init-postgresql/data.sql"
+                - "file:init-postgresql/tables/user.sql"
+                - "file:init-postgresql/data/user.sql"
+            # 检查角色表
+            - table-name: "role"
+              # 角色表不存在则执行下列角色表相关初始化脚本
+              sql-paths:
+                - "file:init-postgresql/tables/role.sql"
+                - "file:init-postgresql/data/role.sql"

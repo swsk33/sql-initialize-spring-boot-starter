@@ -1,5 +1,6 @@
 package io.github.swsk33.sqlinitializecore.model;
 
+import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,6 +48,30 @@ public class ConnectionMetadata {
 			log.error("解析JDBC地址出错！");
 			throw new RuntimeException(e);
 		}
+	}
+
+	/**
+	 * 根据当前元数据，拼接为连接 jdbc url
+	 *
+	 * @return 连接 jdbc url
+	 */
+	public String toConnectionUrl() {
+		return String.format("jdbc:%s://%s/%s", databasePlatform, hostAndPort, databaseName);
+	}
+
+	/**
+	 * 根据当前元数据，拼接为连接 jdbc url，指定其它数据库名
+	 *
+	 * @param rewriteDatabase 指定的其它连接数据库名
+	 * @return 连接 jdbc url，使用指定的数据库名
+	 */
+	public String toConnectionUrl(String rewriteDatabase) {
+		// 若未给定数据库名，则不连接至任何数据库
+		if (StrUtil.isEmpty(rewriteDatabase)) {
+			return String.format("jdbc:%s://%s/", databasePlatform, hostAndPort);
+		}
+		// 使用给定的数据库名构建连接字符串
+		return String.format("jdbc:%s://%s/%s", databasePlatform, hostAndPort, rewriteDatabase);
 	}
 
 }

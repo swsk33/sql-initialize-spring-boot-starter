@@ -1,5 +1,6 @@
 package io.github.swsk33.sqlinitializecore.util;
 
+import cn.hutool.core.collection.CollectionUtil;
 import io.github.swsk33.sqlinitializecore.strategy.context.CreateDatabaseContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
@@ -82,8 +83,8 @@ public class SQLExecuteUtils {
 	 * @param connection 数据库连接对象，通过这个连接执行脚本
 	 */
 	public static void batchRunSQLScript(List<String> paths, Connection connection) {
-		if (paths == null || paths.isEmpty()) {
-			log.warn("未配置初始化SQL脚本路径！");
+		if (CollectionUtil.isEmpty(paths)) {
+			log.warn("未配置初始化SQL脚本路径，跳过执行！");
 			return;
 		}
 		for (String path : paths) {

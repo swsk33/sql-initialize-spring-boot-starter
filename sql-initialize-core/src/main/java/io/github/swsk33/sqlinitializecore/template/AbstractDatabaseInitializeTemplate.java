@@ -1,5 +1,6 @@
 package io.github.swsk33.sqlinitializecore.template;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import io.github.swsk33.sqlinitializecore.model.ConnectionMetadata;
 import io.github.swsk33.sqlinitializecore.model.config.CoreConfig;
@@ -76,13 +77,24 @@ public abstract class AbstractDatabaseInitializeTemplate {
 				SQLExecuteUtils.createDatabase(metadata.getDatabasePlatform(), metadata.getDatabaseName(), connection);
 				// 执行数据库级的初始化脚本
 				log.info("开始执行数据库{}的库级初始化脚本...", metadata.getDatabaseName());
-				SQLExecuteUtils.batchRunSQLScript(databaseCheckConfig.getSqlPaths(), connection);
-				return;
+				if (CollectionUtil.isEmpty(databaseCheckConfig.getSqlPaths())) {
+					log.warn("数据库级初始化脚本未配置，跳过数据库初始化！");
+				} else {
+					// 重连接至新建的数据库
+					try (Connection newConnection = DriverManager.getConnection(metadata.toConnectionUrl(), datasourceConfig.getUsername(), datasourceConfig.getPassword())) {
+						SQLExecuteUtils.batchRunSQLScript(databaseCheckConfig.getSqlPaths(), newConnection);
+						log.info("已完成数据库级初始化脚本执行！");
+					} catch (Exception e) {
+						log.error("执行数据库级初始化脚本失败！", e);
+						throw new RuntimeException(e);
+					}
+				}
+			} else {
+				log.info("数据库存在，不需要创建！");
 			}
-			log.info("数据库存在，不需要创建！");
 		} catch (Exception e) {
 			log.error("连接至数据库检查元数据或执行数据库初始化脚本时失败！", e);
-			throw new RuntimeException("连接至数据库检查元数据或执行数据库初始化脚本时失败！", e);
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -105,7 +117,7 @@ public abstract class AbstractDatabaseInitializeTemplate {
 			return;
 		}
 		List<TableSqlConfig> tableList = tableCheckConfig.getTableList();
-		if (tableList == null || tableList.isEmpty()) {
+		if (CollectionUtil.isEmpty(tableList)) {
 			log.warn("未配置需要检查的数据表，跳过表初始化！");
 			return;
 		}
@@ -129,7 +141,7 @@ public abstract class AbstractDatabaseInitializeTemplate {
 			}
 		} catch (Exception e) {
 			log.error("初始化表格失败！", e);
-			throw new RuntimeException("初始化表格失败！", e);
+			throw new RuntimeException(e);
 		}
 	}
 

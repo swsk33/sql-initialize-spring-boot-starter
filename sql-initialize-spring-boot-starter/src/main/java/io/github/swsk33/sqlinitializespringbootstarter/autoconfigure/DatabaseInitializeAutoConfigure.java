@@ -11,9 +11,8 @@ import io.github.swsk33.sqlinitializecore.template.AbstractDatabaseInitializeTem
 import io.github.swsk33.sqlinitializecore.template.context.DatabaseInitializeTemplateContext;
 import io.github.swsk33.sqlinitializespringbootstarter.properties.DatabaseInitializeProperties;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.ApplicationRunner;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
@@ -27,7 +26,17 @@ import java.util.List;
 @Slf4j
 @Configuration("SQLInitializeAutoConfigure")
 @EnableConfigurationProperties(DatabaseInitializeProperties.class)
-public class DatabaseInitializeAutoConfigure {
+public class DatabaseInitializeAutoConfigure implements InitializingBean {
+
+	/**
+	 * Spring 环境配置
+	 */
+	private final Environment environment;
+
+	/**
+	 * 获取读取的配置文件值
+	 */
+	private final DatabaseInitializeProperties initializeProperties;
 
 	/**
 	 * Spring Boot数据源连接地址配置键
@@ -43,6 +52,17 @@ public class DatabaseInitializeAutoConfigure {
 	 * Spring Boot数据源密码配置键
 	 */
 	private static final String DATASOURCE_PASSWORD_KEY = "spring.datasource.password";
+
+	/**
+	 * 构造器依赖自动注入
+	 *
+	 * @param environment          配置环境变量
+	 * @param initializeProperties 初始化属性
+	 */
+	public DatabaseInitializeAutoConfigure(Environment environment, DatabaseInitializeProperties initializeProperties) {
+		this.environment = environment;
+		this.initializeProperties = initializeProperties;
+	}
 
 	/**
 	 * 将列表转换为不可变列表集合，避免误操作修改配置
@@ -63,8 +83,7 @@ public class DatabaseInitializeAutoConfigure {
 	 * @param environment 配置环境变量
 	 * @return 数据源配置
 	 */
-	@Bean
-	public DatasourceConfig buildDatasourceConfig(Environment environment) {
+	private DatasourceConfig buildDatasourceConfig(Environment environment) {
 		String datasourceUrl = environment.getProperty(DATASOURCE_URL_KEY);
 		if (StrUtil.isEmpty(datasourceUrl)) {
 			throw new IllegalStateException("未配置数据源连接地址：" + DATASOURCE_URL_KEY);
@@ -82,8 +101,7 @@ public class DatabaseInitializeAutoConfigure {
 	 * @param initializeProperties 读取的配置文件值
 	 * @return 核心配置
 	 */
-	@Bean
-	public CoreConfig buildCoreConfig(DatabaseInitializeProperties initializeProperties, DatasourceConfig datasourceConfig) {
+	private CoreConfig buildCoreConfig(DatabaseInitializeProperties initializeProperties, DatasourceConfig datasourceConfig) {
 		DatabaseInitializeProperties.DatabaseCheckProperties databaseCheckProperties = initializeProperties.getDatabaseCheck();
 		DatabaseInitializeProperties.TableCheckProperties tableCheckProperties = initializeProperties.getTableCheck();
 		// 构建基本核心属性
@@ -124,21 +142,22 @@ public class DatabaseInitializeAutoConfigure {
 	}
 
 	/**
-	 * 用于检查和初始化整个数据库的方法
-	 *
-	 * @param coreConfig 注入已构建的核心配置
+	 * 用于检查和初始化整个数据库的方法。
 	 */
-	@Bean
-	public ApplicationRunner checkAndInitialize(CoreConfig coreConfig) {
+	@Override
+	public void afterPropertiesSet() {
 		log.info("------- SQL自动初始化开始自动配置φ(>ω<*)  -------");
-		return args -> {
-			// 获取模板执行
-			AbstractDatabaseInitializeTemplate initializeTemplate = DatabaseInitializeTemplateContext.getTemplate(coreConfig);
-			if (initializeTemplate == null) {
-				throw new IllegalStateException("暂不支持当前数据源对应的数据库初始化模板！");
-			}
-			initializeTemplate.runInitialize(coreConfig);
-		};
+		if (!initializeProperties.isEnabled()) {
+			log.warn("SQL自动初始化已禁用！将不会进行数据库检查和初始化操作！");
+			return;
+		}
+		DatasourceConfig datasourceConfig = buildDatasourceConfig(environment);
+		CoreConfig coreConfig = buildCoreConfig(initializeProperties, datasourceConfig);
+		AbstractDatabaseInitializeTemplate initializeTemplate = DatabaseInitializeTemplateContext.getTemplate(coreConfig);
+		if (initializeTemplate == null) {
+			throw new IllegalStateException("暂不支持当前数据源对应的数据库初始化模板！");
+		}
+		initializeTemplate.runInitialize(coreConfig);
 	}
 
 }

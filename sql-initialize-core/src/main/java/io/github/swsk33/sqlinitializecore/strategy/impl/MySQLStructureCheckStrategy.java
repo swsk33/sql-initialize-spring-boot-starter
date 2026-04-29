@@ -16,7 +16,7 @@ public class MySQLStructureCheckStrategy implements DatabaseStructureCheckStrate
 
 	@Override
 	public String getCheckConnectionURL(ConnectionMetadata metadata) {
-		return "jdbc:" + metadata.getDatabasePlatform() + "://" + metadata.getHostAndPort() + "/";
+		return metadata.toConnectionUrl(null);
 	}
 
 	@Override

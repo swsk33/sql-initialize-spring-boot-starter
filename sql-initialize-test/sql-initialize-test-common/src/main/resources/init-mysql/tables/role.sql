@@ -1,6 +1,3 @@
--- 先删除表
-drop table if exists `role`;
-
 -- 创建角色表
 create table `role`
 (
