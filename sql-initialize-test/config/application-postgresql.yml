@@ -1,0 +1,36 @@
+# Spring Boot PostgreSQL数据源配置
+spring:
+  datasource:
+    url: "jdbc:postgresql://${POSTGRE_HOST:127.0.0.1}:${POSTGRE_HOST:5432}/init_demo?TimeZone=Asia/Shanghai"
+    username: "${POSTGRE_USER:root}"
+    password: "${POSTGRE_PASSWORD:dev-2333}"
+    driver-class-name: "org.postgresql.Driver"
+
+# MyBatis XML位置
+mybatis:
+  mapper-locations: "classpath:/mapper/postgresql/*.xml"
+
+# sql-initialize配置
+io:
+  github:
+    swsk33:
+      sql-init:
+        # 是否启用数据库初始化检查
+        enabled: true
+        # 数据库检查选项
+        database-check:
+          # 是否检查数据库是否存在
+          check-database: true
+          # 若数据库不存在，则会依次执行下列SQL文件
+          # sql-paths:
+          #  - "classpath:setup-database.sql"
+        # 数据表检查选项
+        table-check:
+          # 是否检查特定数据表是否存在
+          check-table: true
+          # 配置要检查的数据表列表
+          table-list:
+            - table-name: "user"
+              sql-paths:
+                - "file:init-postgresql/table.sql"
+                - "file:init-postgresql/data.sql"

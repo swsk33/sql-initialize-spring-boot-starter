@@ -139,7 +139,6 @@ public abstract class AbstractDatabaseInitializeTemplate {
 	 * @param coreConfig 核心配置对象
 	 */
 	public final void runInitialize(CoreConfig coreConfig) {
-		log.info("------- SQL自动初始化开始自动配置φ(>ω<*)  -------");
 		// 检查是否进行总体初始化步骤
 		if (!coreConfig.isEnabled()) {
 			log.warn("SQL自动初始化已禁用！将不会进行数据库检查和初始化操作！");

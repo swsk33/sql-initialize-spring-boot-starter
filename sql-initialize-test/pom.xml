@@ -12,14 +12,17 @@
 	<description>SQL Initialize测试父项目</description>
 
 	<modules>
+		<module>sql-initialize-test-common</module>
 		<module>sql-initialize-spring-boot2-test</module>
 		<module>sql-initialize-spring-boot3-test</module>
+		<module>sql-initialize-spring-boot4-test</module>
 	</modules>
 
 	<properties>
-		<spring.boot2.test.version>2.7.12</spring.boot2.test.version>
-		<spring.boot3.test.version>3.2.2</spring.boot3.test.version>
-		<postgre.version>42.7.2</postgre.version>
+		<spring.boot2.test.version>2.7.18</spring.boot2.test.version>
+		<spring.boot3.test.version>3.5.14</spring.boot3.test.version>
+		<spring.boot4.test.version>4.0.5</spring.boot4.test.version>
+		<postgre.version>42.7.11</postgre.version>
 		<!-- 当前模块不进行部署和发布 -->
 		<maven.deploy.skip>true</maven.deploy.skip>
 	</properties>
@@ -34,4 +37,32 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<!-- 统一 Spring Boot 插件配置 -->
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+					<version>${spring.boot2.test.version}</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>repackage</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<excludes>
+							<exclude>
+								<groupId>org.projectlombok</groupId>
+								<artifactId>lombok</artifactId>
+							</exclude>
+						</excludes>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>

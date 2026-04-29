@@ -6,14 +6,13 @@
 		<artifactId>sql-initialize-test-parent</artifactId>
 		<version>3.0.0</version>
 	</parent>
-	<artifactId>sql-initialize-spring-boot2-test</artifactId>
-	<name>SQL Initialize Spring Boot 2.x Test</name>
-	<description>SQL-Initialize Spring Boot测试，2.x版本</description>
+	<artifactId>sql-initialize-spring-boot4-test</artifactId>
+	<name>SQL Initialize Spring Boot 4.x Test</name>
+	<description>SQL-Initialize Spring Boot测试，4.x版本</description>
 
 	<properties>
-		<java.version>1.8</java.version>
-		<maven.compiler.source>${java.version}</maven.compiler.source>
-		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<java.version>21</java.version>
+		<maven.compiler.release>${java.version}</maven.compiler.release>
 	</properties>
 
 	<dependencies>
@@ -27,7 +26,7 @@
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
 			<artifactId>mybatis-spring-boot-starter</artifactId>
-			<version>2.3.2</version>
+			<version>4.0.1</version>
 		</dependency>
 
 		<!-- MySQL 驱动 -->
@@ -58,7 +57,7 @@
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
-				<version>${spring.boot2.test.version}</version>
+				<version>${spring.boot4.test.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -70,7 +69,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${spring.boot2.test.version}</version>
+				<version>${spring.boot4.test.version}</version>
 			</plugin>
 		</plugins>
 	</build>

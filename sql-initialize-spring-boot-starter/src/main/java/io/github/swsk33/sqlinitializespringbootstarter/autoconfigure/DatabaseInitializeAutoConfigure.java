@@ -1,5 +1,6 @@
 package io.github.swsk33.sqlinitializespringbootstarter.autoconfigure;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import io.github.swsk33.sqlinitializecore.model.config.CoreConfig;
 import io.github.swsk33.sqlinitializecore.model.config.DatabaseCheckConfig;
@@ -44,16 +45,13 @@ public class DatabaseInitializeAutoConfigure {
 	private static final String DATASOURCE_PASSWORD_KEY = "spring.datasource.password";
 
 	/**
-	 * 复制列表，避免核心配置持有Spring Boot绑定对象的可变集合
+	 * 将列表转换为不可变列表集合，避免误操作修改配置
 	 *
 	 * @param source 源列表
-	 * @return 不可变列表
+	 * @return 不可变列表，若传入列表为null或空，则返回一个空列表
 	 */
-	private List<String> copyList(List<String> source) {
-		if (source == null) {
-			return null;
-		}
-		if (source.isEmpty()) {
+	private <T> List<T> toImmutableList(List<T> source) {
+		if (CollectionUtil.isEmpty(source)) {
 			return Collections.emptyList();
 		}
 		return Collections.unmodifiableList(new ArrayList<>(source));
@@ -88,33 +86,41 @@ public class DatabaseInitializeAutoConfigure {
 	public CoreConfig buildCoreConfig(DatabaseInitializeProperties initializeProperties, DatasourceConfig datasourceConfig) {
 		DatabaseInitializeProperties.DatabaseCheckProperties databaseCheckProperties = initializeProperties.getDatabaseCheck();
 		DatabaseInitializeProperties.TableCheckProperties tableCheckProperties = initializeProperties.getTableCheck();
+		// 构建基本核心属性
 		CoreConfig.CoreConfigBuilder coreConfigBuilder = CoreConfig.builder()
 				.enabled(initializeProperties.isEnabled())
 				.datasource(datasourceConfig);
+		// 构建数据库初始化属性
 		if (databaseCheckProperties != null) {
-			coreConfigBuilder.databaseCheck(DatabaseCheckConfig.builder()
-					.checkDatabase(databaseCheckProperties.isCheckDatabase())
-					.sqlPaths(copyList(databaseCheckProperties.getSqlPaths()))
-					.build());
+			// 构建并组装至核心属性
+			coreConfigBuilder.databaseCheck(
+					DatabaseCheckConfig.builder()
+							.checkDatabase(databaseCheckProperties.isCheckDatabase())
+							.sqlPaths(toImmutableList(databaseCheckProperties.getSqlPaths()))
+							.build()
+			);
 		}
-		if (tableCheckProperties == null) {
-			return coreConfigBuilder.build();
-		}
-		List<TableSqlConfig> tableList = null;
-		if (tableCheckProperties.getTableList() != null) {
-			tableList = new ArrayList<>();
-			for (DatabaseInitializeProperties.TableSqlProperties tableProperties : tableCheckProperties.getTableList()) {
-				tableList.add(TableSqlConfig.builder()
-						.schemaName(tableProperties.getSchemaName())
-						.tableName(tableProperties.getTableName())
-						.sqlPaths(copyList(tableProperties.getSqlPaths()))
-						.build());
+		// 构建表初始化属性
+		if (tableCheckProperties != null) {
+			// 构建属性
+			TableCheckConfig.TableCheckConfigBuilder tableCheckConfigBuilder = TableCheckConfig.builder()
+					.checkTable(tableCheckProperties.isCheckTable());
+			// 特定表的初始化属性
+			if (!CollectionUtil.isEmpty(tableCheckProperties.getTableList())) {
+				List<TableSqlConfig> tableList = new ArrayList<>();
+				for (DatabaseInitializeProperties.TableSqlProperties tableProperties : tableCheckProperties.getTableList()) {
+					tableList.add(TableSqlConfig.builder()
+							.schemaName(tableProperties.getSchemaName())
+							.tableName(tableProperties.getTableName())
+							.sqlPaths(tableProperties.getSqlPaths())
+							.build());
+				}
+				tableCheckConfigBuilder.tableList(toImmutableList(tableList));
 			}
+			// 组装到核心属性
+			coreConfigBuilder.tableCheck(tableCheckConfigBuilder.build());
 		}
-		return coreConfigBuilder.tableCheck(TableCheckConfig.builder()
-				.checkTable(tableCheckProperties.isCheckTable())
-				.tableList(tableList == null ? null : Collections.unmodifiableList(tableList))
-				.build()).build();
+		return coreConfigBuilder.build();
 	}
 
 	/**
@@ -124,6 +130,7 @@ public class DatabaseInitializeAutoConfigure {
 	 */
 	@Bean
 	public ApplicationRunner checkAndInitialize(CoreConfig coreConfig) {
+		log.info("------- SQL自动初始化开始自动配置φ(>ω<*)  -------");
 		return args -> {
 			// 获取模板执行
 			AbstractDatabaseInitializeTemplate initializeTemplate = DatabaseInitializeTemplateContext.getTemplate(coreConfig);
