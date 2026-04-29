@@ -29,11 +29,11 @@ public class CreateDatabaseContext {
 	}
 
 	/**
-	 * 根据传入数据库平台和创建的数据库名生成SQL语句
+	 * 根据传入数据库平台和创建的数据库名生成 SQL 语句
 	 *
 	 * @param databasePlatform 数据库平台，例如mysql
 	 * @param databaseName     待创建的数据库名
-	 * @return 生成的SQL语句
+	 * @return 生成的 SQL 语句
 	 */
 	public static String generateCreateDatabaseSQL(String databasePlatform, String databaseName) {
 		databasePlatform = databasePlatform.toLowerCase();

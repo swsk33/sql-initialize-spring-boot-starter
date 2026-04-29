@@ -1,14 +1,15 @@
 # Maven
-/**/target/
+target/
 
 # IDEA
-/**/.idea/
-/**/*.iml
+.idea/
+*.iml
 
 # VSCode
-/**/.vscode/
+.vscode/
 
 # Eclipse
-/**/.settings/
-/**/.classpath
-/**/.project
+.settings/
+.classpath
+.project
+.factorypath

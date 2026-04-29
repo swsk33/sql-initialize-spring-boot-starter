@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>io.github.swsk33</groupId>
 		<artifactId>sql-initialize-parent</artifactId>
-		<version>2.2.0</version>
+		<version>3.0.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>sql-initialize-test-parent</artifactId>
@@ -20,15 +20,17 @@
 		<spring.boot2.test.version>2.7.12</spring.boot2.test.version>
 		<spring.boot3.test.version>3.2.2</spring.boot3.test.version>
 		<postgre.version>42.7.2</postgre.version>
+		<!-- 当前模块不进行部署和发布 -->
+		<maven.deploy.skip>true</maven.deploy.skip>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
-			<!-- SQL初始化Starter版本管理 -->
+			<!-- SQL 初始化Starter版本管理 -->
 			<dependency>
 				<groupId>io.github.swsk33</groupId>
 				<artifactId>sql-initialize-spring-boot-starter</artifactId>
-				<version>${sql-initialize.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

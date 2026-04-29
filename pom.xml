@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.swsk33</groupId>
 	<artifactId>sql-initialize-parent</artifactId>
-	<version>2.2.0</version>
+	<version>3.0.0</version>
 	<packaging>pom</packaging>
 	<name>SQL-Initialize Parent</name>
 	<description>用于自动初始化关系型数据库的外部库</description>
@@ -12,20 +12,22 @@
 	<modules>
 		<module>sql-initialize-core</module>
 		<module>sql-initialize-spring-boot-starter</module>
+		<module>sql-initialize-test</module>
 	</modules>
 
 	<properties>
 		<java.version>1.8</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<maven.compiler.parameters>true</maven.compiler.parameters>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<sql-initialize.version>2.2.0</sql-initialize.version>
+		<maven.test-plugin.version>3.5.5</maven.test-plugin.version>
 	</properties>
 
 	<licenses>
 		<license>
-			<name>GNU General Public License v2.0</name>
-			<url>https://www.gnu.org/licenses/old-licenses/gpl-2.0.html</url>
+			<name>Apache License Version 2.0</name>
+			<url>https://www.apache.org/licenses/</url>
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
@@ -46,44 +48,83 @@
 
 	<!-- 公用依赖 -->
 	<dependencies>
-		<!-- Lombok注解支持 -->
+		<!-- Lombok 注解支持 -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.30</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
 		<dependencies>
-			<!-- Hutool实用工具 -->
+			<!-- Lombok 注解支持 -->
 			<dependency>
-				<groupId>cn.hutool</groupId>
-				<artifactId>hutool-all</artifactId>
-				<version>5.8.26</version>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<version>1.18.46</version>
+				<scope>provided</scope>
 			</dependency>
 
-			<!-- SQL初始化核心 -->
+			<!-- Hutool 实用工具 -->
+			<dependency>
+				<groupId>cn.hutool</groupId>
+				<artifactId>hutool-bom</artifactId>
+				<version>5.8.44</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<!-- SQL 初始化核心 -->
 			<dependency>
 				<groupId>io.github.swsk33</groupId>
 				<artifactId>sql-initialize-core</artifactId>
-				<version>${sql-initialize.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
 	<build>
+		<!-- 插件版本管理 -->
+		<pluginManagement>
+			<plugins>
+				<!-- 测试相关插件 -->
+				<plugin>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${maven.test-plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>${maven.test-plugin.version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
 		<plugins>
-			<!-- Sonatype中央仓库发布插件 -->
+			<!-- Maven 源码编译插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.15.0</version>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+
+			<!-- Sonatype 中央仓库发布插件 -->
 			<plugin>
 				<groupId>org.sonatype.central</groupId>
 				<artifactId>central-publishing-maven-plugin</artifactId>
-				<version>0.3.0</version>
+				<version>0.10.0</version>
 				<extensions>true</extensions>
 				<configuration>
 					<publishingServerId>central</publishingServerId>
-					<tokenAuth>true</tokenAuth>
 				</configuration>
 			</plugin>
 
@@ -91,7 +132,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>3.3.0</version>
+				<version>3.4.0</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -102,14 +143,15 @@
 				</executions>
 			</plugin>
 
-			<!-- Javadoc文档生成插件 -->
+			<!-- Javadoc 文档生成插件 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.6.3</version>
+				<version>3.12.0</version>
 				<configuration>
 					<show>private</show>
 					<nohelp>true</nohelp>
+					<doclint>all,-missing</doclint>
 				</configuration>
 				<executions>
 					<execution>
@@ -121,11 +163,11 @@
 				</executions>
 			</plugin>
 
-			<!-- GPG签名插件 -->
+			<!-- GPG 签名插件 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
-				<version>3.1.0</version>
+				<version>3.2.8</version>
 				<executions>
 					<execution>
 						<id>sign-artifacts</id>

@@ -3,12 +3,12 @@
 	<parent>
 		<groupId>io.github.swsk33</groupId>
 		<artifactId>sql-initialize-parent</artifactId>
-		<version>2.2.0</version>
+		<version>3.0.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>sql-initialize-spring-boot-starter</artifactId>
 	<name>SQL-Initialize Spring Boot Starter</name>
-	<description>用于自动初始化关系型数据库的starter</description>
+	<description>用于自动初始化关系型数据库的 Starter</description>
 	<url>https://github.com/swsk33/sql-initialize-spring-boot-starter</url>
 
 	<dependencies>
@@ -25,7 +25,13 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- SQL初始化核心 -->
+		<!-- Spring JDBC 脚本执行器 -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
+
+		<!-- SQL 初始化核心 -->
 		<dependency>
 			<groupId>io.github.swsk33</groupId>
 			<artifactId>sql-initialize-core</artifactId>

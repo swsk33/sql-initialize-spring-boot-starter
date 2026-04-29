@@ -29,9 +29,9 @@ public class ConnectionMetadata {
 	private String databaseName;
 
 	/**
-	 * 从一个完整的JDBC连接地址构造连接信息对象
+	 * 从一个完整的 JDBC 连接地址构造连接信息对象
 	 *
-	 * @param jdbcUrl JDBC连接地址
+	 * @param jdbcUrl JDBC 连接地址
 	 */
 	public ConnectionMetadata(String jdbcUrl) {
 		try {
@@ -45,7 +45,7 @@ public class ConnectionMetadata {
 			databaseName = databaseURI.getPath().substring(1);
 		} catch (Exception e) {
 			log.error("解析JDBC地址出错！");
-			log.error(e.getMessage());
+			throw new RuntimeException(e);
 		}
 	}
 

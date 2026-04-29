@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>sql-initialize-parent</artifactId>
 		<groupId>io.github.swsk33</groupId>
-		<version>2.2.0</version>
+		<version>3.0.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>sql-initialize-core</artifactId>
@@ -12,17 +12,25 @@
 	<url>https://github.com/swsk33/sql-initialize-spring-boot-starter</url>
 
 	<dependencies>
-		<!-- Hutool实用工具 -->
+		<!-- Hutool 实用工具 -->
 		<dependency>
 			<groupId>cn.hutool</groupId>
-			<artifactId>hutool-all</artifactId>
+			<artifactId>hutool-core</artifactId>
 		</dependency>
 
-		<!-- Slf4J-API -->
+		<!-- Slf4J 日志门面 -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>2.0.12</version>
+			<version>2.0.17</version>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- Spring JDBC 脚本执行器 -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>6.2.18</version>
 			<optional>true</optional>
 		</dependency>
 	</dependencies>
