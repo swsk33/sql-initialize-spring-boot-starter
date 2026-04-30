@@ -23,7 +23,8 @@
 		<spring.boot3.test.version>3.5.14</spring.boot3.test.version>
 		<spring.boot4.test.version>4.0.5</spring.boot4.test.version>
 		<postgre.version>42.7.11</postgre.version>
-		<!-- 当前模块不进行部署和发布 -->
+		<!-- 当前模块不进行发布 -->
+		<skipPublishing>true</skipPublishing>
 		<maven.deploy.skip>true</maven.deploy.skip>
 	</properties>
 
