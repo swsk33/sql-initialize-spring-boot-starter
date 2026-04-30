@@ -49,7 +49,6 @@
 		<dependency>
 			<groupId>io.github.swsk33</groupId>
 			<artifactId>sql-initialize-test-common</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 

@@ -19,9 +19,11 @@
 	</modules>
 
 	<properties>
+		<!-- 测试 Spring Boot 版本 -->
 		<spring.boot2.test.version>2.7.18</spring.boot2.test.version>
 		<spring.boot3.test.version>3.5.14</spring.boot3.test.version>
 		<spring.boot4.test.version>4.0.5</spring.boot4.test.version>
+		<!-- 覆盖 PostgreSQL 驱动版本 -->
 		<postgre.version>42.7.11</postgre.version>
 		<!-- 当前模块不进行发布 -->
 		<skipPublishing>true</skipPublishing>
@@ -30,10 +32,10 @@
 
 	<dependencyManagement>
 		<dependencies>
-			<!-- SQL 初始化Starter版本管理 -->
+			<!-- SQL 初始化公用测试模块 -->
 			<dependency>
 				<groupId>io.github.swsk33</groupId>
-				<artifactId>sql-initialize-spring-boot-starter</artifactId>
+				<artifactId>sql-initialize-test-common</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 		</dependencies>

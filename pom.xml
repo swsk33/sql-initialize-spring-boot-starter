@@ -75,13 +75,6 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-
-			<!-- SQL 初始化核心 -->
-			<dependency>
-				<groupId>io.github.swsk33</groupId>
-				<artifactId>sql-initialize-core</artifactId>
-				<version>${project.version}</version>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
