@@ -94,8 +94,8 @@ io:
 
 - 可以配置`classpath`路径或者文件系统路径（实际在电脑磁盘上的），`classpath`路径需要以`classpath:`开头，而文件系统路径需要以`file:`开头，上述例子中配置的是`classpath`路径
 - 在Maven项目中，`classpath`的根路径对应着项目的`src/main/resources`目录
-- 若使用文件系统路径，可以使用相对路径或者绝对路径，在IDEA开发Maven项目时相对路径是相对于项目中`src`目录所在的路径，编译完成后的项目相对路径则为运行项目时的运行路径
-- 本项目在启动时会先创建数据库，然后再执行配置的SQL脚本，因此**不需要在SQL脚本中编写创建数据库的语句**，只需要写创建表或者插入初始数据的语句即可
+- 若使用文件系统路径，可以使用相对路径或者绝对路径，在IDEA开发Maven项目时相对路径默认是相对于项目中`src`目录所在的路径（可以在运行配置中自定义），编译完成后的项目相对路径则为运行项目时的运行路径
+- 本项目在启动时会先创建数据库，然后再执行配置的SQL脚本，因此**不需要在配置在`io.github.swsk33.sql-init.database-check.sql-paths`中SQL脚本中编写`create database`语句**，只需要写创建表、插入初始数据或初始化数据库相关配置的语句即可
 - 配置多个SQL文件时，会按照配置的顺序依次执行（从上至下，也就是从数组的`0`下标开始）
 - 如果仅仅是创建数据库，不需要创建表，则可以省略上述SQL路径配置
 
@@ -190,6 +190,7 @@ io:
         # 数据表检查选项
         table-check:
           # 是否检查特定数据表是否存在
+          # 如果为false，则不会去判断下面table-list中配置的要检查的表是否存在
           # 默认：true
           check-table: true
           # 配置要检查的数据表列表
@@ -199,7 +200,7 @@ io:
             - table-name: "user"
               # 表所属schema
               # PostgreSQL默认为：public
-              # MySQL则建议省略该字段
+              # MySQL建议省略该字段
               schema-name: "public"
               # 表级别初始化脚本
               # 若用户表user不存在，则会执行下列用户表相关初始化脚本
@@ -215,14 +216,136 @@ io:
                 - "classpath:init-mysql/data/role.sql"
 ```
 
-如果想保持默认值，则可以省略对应的配置。
+如果想**保持默认值**，则可以**省略对应的配置**。
 
 通过完整配置可以得知，`sql-initialize-spring-boot-starter`支持下列功能：
 
-- **数据库级别检查与初始化**：检查数据库是否存在，不存在则自动创建并执行用户配置的数据库级初始化SQL脚本
-- **表级别检查与初始化**：检查特定的某个表是否存在，不存在则会执行用户指定的表级别初始化SQL脚本
+- **数据库级别检查与初始化**：检查数据库是否存在，不存在则**自动创建数据库**并**执行用户配置的数据库级初始化SQL脚本**
+- **表级别检查与初始化**：检查特定的某个表是否存在，不存在则会**执行用户指定的表级别初始化SQL脚本**
 
-## 5，部分问题
+整体的数据库初始化流程如下UML活动图所示：
+
+![](https://swsk33-note.oss-cn-shanghai.aliyuncs.com/20260430225123.png)
+
+接下来，将介绍几个常用的使用案例供大家参考。
+
+### (1) 简单初始化数据库和所有表
+
+在表格比较少的情况下，我们可以仅配置`io.github.swsk33.sql-init.database-check.*`这一部分实现检查并自动创建特定数据库，同时配置该部分`sql-paths`指定脚本一键初始化表即可。
+
+可以分别准备一个`init-tables.sql`和`init-data.sql`文件放在`src/main/resources`目录下，前者用于创建全部表格，后者用于初始化数据。
+
+`init-tables.sql`文件内容示例：
+
+```sql
+-- 创建用户表
+create table `user` (...);
+
+-- 创建角色表
+create table `role` (...);
+
+-- 省略其它...
+```
+
+`init-data.sql`文件内容示例：
+
+```sql
+-- 初始化内部角色
+insert into `role`
+values (...);
+
+-- 初始化内部用户
+insert into `user`
+values (...);
+```
+
+然后添加如下初始化配置即可：
+
+```yaml
+# sql-initialize配置
+io:
+  github:
+    swsk33:
+      sql-init:
+        database-check:
+          sql-paths:
+            - "classpath:init-tables.sql"
+            - "classpath:init-data.sql"
+```
+
+### (2) 分离数据库和表初始化逻辑
+
+在一些情况下，我们需要更加细粒度的初始化流程。例如，我们需要使用集成了PostGIS插件的PostgreSQL数据库存储地理信息时，初始化流程就稍显复杂了：
+
+- 首先要创建数据库
+- 然后要启用数据库的`postgis`插件
+- 最后需要初始化我们的表格
+
+这时，就建议分别配置：
+
+- `io.github.swsk33.sql-init.database-check.*`用于**检查和初始化数据库**工作，例如启用数据库的`postgis`插件
+- `io.github.swsk33.sql-init.table-check.*`用于**检查和初始化表格**工作，包括依次检查所需表是否存在，然后执行SQL脚本创建表
+
+首先，在`src/main/resources`目录下创建创建数据库后用于初始化数据库的SQL脚本`setup-db.sql`，后续将其配置到数据库级的初始化脚本列表：
+
+```sql
+-- 数据库级初始化脚本
+-- 启用PostGIS插件
+create extension if not exists postgis;
+```
+
+然后，分别创建用于初始化每个表的脚本，后续将其配置到表级初始化脚本列表。
+
+例如初始化节点表的脚本`create-node-table.sql`：
+
+```sql
+create table "node" (...);
+```
+
+以及初始化边表的脚本`create-edge-table.sql`：
+
+```sql
+create table "edge" (...);
+```
+
+最后进行配置：
+
+```yaml
+# sql-initialize配置
+io:
+  github:
+    swsk33:
+      sql-init:
+        # 数据库检查选项
+        database-check:
+          # 数据库级初始化脚本配置
+          sql-paths:
+            - "classpath:setup-db.sql"
+        # 数据表检查选项
+        table-check:
+          table-list:
+            # 检查节点表
+            - table-name: "node"
+              # 表级别初始化脚本(用于初始化node表)
+              sql-paths:
+                - "classpath:create-node-table.sql"
+            # 检查边表
+            - table-name: "edge"
+              # 表级别初始化脚本(用于初始化edge表)
+              sql-paths:
+                - "classpath:create-edge-table.sql"
+```
+
+通过上述配置，项目启动时就会依次完成下列检查和初始化工作：
+
+- 首先检查数据库是否存在，不存在则自动创建并执行`setup-db.sql`文件完成数据库级别初始化，存在则不进行任何操作
+- 然后依次检查上述配置的表是否存在：
+	- 检查`node`表是否存在，不存在则执行`create-node-table.sql`文件，存在则不进行任何操作
+	- 检查`edge`表是否存在，不存在则执行`create-edge-table.sql`文件，存在则不进行任何操作
+
+可见上述表级别初始化配置中，可以给每个表单独配置是否检查其存在，然后配置其对应的多个初始化脚本。如果表格过多，配置过于麻烦，那么仍然可以将所有`create table`操作写在一个或几个`sql`文件中，然后`io.github.swsk33.sql-init.table-check.table-list`下只配一个表检查配置并指定`sql-paths`为你的创建表脚本即可，此时建议配置检查的表为较为核心的业务表。
+
+## 5，已知问题
 
 ### (1) 连接PostgreSQL时，报错`ERROR: database "xxx" already exists`
 
