@@ -22,12 +22,12 @@ public class DatabaseInitializeProperties {
 	/**
 	 * 数据库检查配置
 	 */
-	private DatabaseCheckProperties databaseCheck;
+	private DatabaseCheckProperties databaseCheck = new DatabaseCheckProperties();
 
 	/**
 	 * 表检查配置
 	 */
-	private TableCheckProperties tableCheck;
+	private TableCheckProperties tableCheck = new TableCheckProperties();
 
 	/**
 	 * 数据库检查配置属性
